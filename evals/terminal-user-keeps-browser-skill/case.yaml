@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: terminal-user-keeps-browser-skill
+expected_outcome: |
+  Saves or uses a profile with claude-code=cli, applies the surface rule, and does NOT
+  mark a browser-automation skill as superseded by the desktop-only browser pane. It may
+  mention Claude in Chrome as a partial alternative that needs the Chrome extension.

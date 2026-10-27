@@ -1,0 +1,36 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  scan:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python: ["3.9", "3.13"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: compile
+        run: python -m py_compile scripts/scan.py
+      - name: registry is valid JSON
+        run: python -c "import json; json.load(open('scripts/hosts.json'))"
+      - name: fixture skills are found
+        run: |
+          mkdir -p "$HOME/.claude/skills" "$HOME/.agents/skills/demo"
+          cp -R . "$HOME/.claude/skills/skill-freshness"
+          printf -- '---\nname: demo\ndescription: demo skill\n---\nRun `definitely-missing-cli --help`.\n```bash\ndefinitely-missing-cli run\n```\n' > "$HOME/.agents/skills/demo/SKILL.md"
+          python scripts/scan.py --env > env.json
+          python scripts/scan.py --check --no-home-scan --out inv.json
+          python - <<'PY'
+          import json
+          d = json.load(open("inv.json"))
+          names = {s["name"] for s in d["skills"]}
+          assert {"skill-freshness", "demo"} <= names, names
+          demo = next(s for s in d["skills"] if s["name"] == "demo")
+          assert any("definitely-missing-cli" in p for p in demo["checks"]["problems"]), demo["checks"]
+          print("ok:", len(d["skills"]), "skills")
+          PY
+      - name: installer syntax
+        run: bash -n install.sh

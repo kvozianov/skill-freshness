@@ -1,0 +1,365 @@
+{
+  "_comment": "Registry of agent hosts that load SKILL.md skills. '~' paths are user-level, others are relative to a project root. A root listed under several hosts is shared. Add a host here to teach the scanner about it; no code change needed. Snapshot 2026-10-27; see references/hosts/*.md for sources.",
+  "hosts": [
+    {
+      "id": "claude-code",
+      "name": "Claude Code",
+      "binaries": [
+        "claude"
+      ],
+      "apps": [
+        "Claude.app"
+      ],
+      "ide_extensions": [
+        "anthropic.claude-code"
+      ],
+      "config_dirs": [
+        "~/.claude"
+      ],
+      "user_skill_dirs": [
+        "~/.claude/skills"
+      ],
+      "project_skill_dirs": [
+        ".claude/skills"
+      ],
+      "managed_skill_dirs": [
+        "~/.claude/skills/synced/*"
+      ],
+      "plugin_manifest": "~/.claude/plugins/installed_plugins.json",
+      "version_cmd": [
+        "claude",
+        "--version"
+      ],
+      "reference": "hosts/claude-code.md"
+    },
+    {
+      "id": "codex",
+      "name": "OpenAI Codex",
+      "binaries": [
+        "codex"
+      ],
+      "apps": [
+        "Codex.app"
+      ],
+      "ide_extensions": [
+        "openai.chatgpt"
+      ],
+      "config_dirs": [
+        "~/.codex"
+      ],
+      "user_skill_dirs": [
+        "~/.agents/skills",
+        "~/.codex/skills",
+        "/etc/codex/skills"
+      ],
+      "project_skill_dirs": [
+        ".agents/skills",
+        ".codex/skills"
+      ],
+      "managed_skill_dirs": [
+        "~/.codex/skills/.system"
+      ],
+      "plugin_skill_dirs": [
+        "~/.codex/plugins/*/skills"
+      ],
+      "version_cmd": [
+        "codex",
+        "--version"
+      ],
+      "reference": "hosts/codex.md"
+    },
+    {
+      "id": "gemini-cli",
+      "name": "Gemini CLI",
+      "binaries": [
+        "gemini"
+      ],
+      "apps": [],
+      "ide_extensions": [
+        "google.gemini-cli-vscode-ide-companion"
+      ],
+      "config_dirs": [
+        "~/.gemini"
+      ],
+      "user_skill_dirs": [
+        "~/.gemini/skills",
+        "~/.agents/skills"
+      ],
+      "project_skill_dirs": [
+        ".gemini/skills",
+        ".agents/skills"
+      ],
+      "managed_skill_dirs": [],
+      "version_cmd": [
+        "gemini",
+        "--version"
+      ],
+      "reference": "hosts/gemini-cli.md"
+    },
+    {
+      "id": "antigravity",
+      "name": "Google Antigravity",
+      "binaries": [
+        "antigravity",
+        "agy"
+      ],
+      "apps": [
+        "Antigravity.app",
+        "Antigravity IDE.app"
+      ],
+      "ide_extensions": [],
+      "config_dirs": [
+        "~/.gemini/antigravity"
+      ],
+      "user_skill_dirs": [
+        "~/.gemini/config/skills",
+        "~/.gemini/antigravity-cli/skills",
+        "~/.gemini/antigravity/skills"
+      ],
+      "project_skill_dirs": [
+        ".agents/skills",
+        ".agent/skills"
+      ],
+      "managed_skill_dirs": [
+        "~/.gemini/antigravity/builtin/skills"
+      ],
+      "version_cmd": null,
+      "reference": "hosts/antigravity.md",
+      "plugin_skill_dirs": [
+        "~/.gemini/config/plugins/*/skills",
+        "~/.gemini/antigravity-cli/plugins/*/skills"
+      ]
+    },
+    {
+      "id": "cursor",
+      "name": "Cursor",
+      "binaries": [
+        "cursor-agent",
+        "cursor"
+      ],
+      "apps": [
+        "Cursor.app"
+      ],
+      "ide_extensions": [],
+      "config_dirs": [
+        "~/.cursor"
+      ],
+      "user_skill_dirs": [
+        "~/.cursor/skills",
+        "~/.agents/skills",
+        "~/.claude/skills",
+        "~/.codex/skills"
+      ],
+      "project_skill_dirs": [
+        ".cursor/skills",
+        ".agents/skills",
+        ".claude/skills",
+        ".codex/skills"
+      ],
+      "managed_skill_dirs": [],
+      "version_cmd": [
+        "cursor-agent",
+        "--version"
+      ],
+      "reference": "hosts/cursor.md"
+    },
+    {
+      "id": "copilot",
+      "name": "GitHub Copilot (CLI / agent)",
+      "binaries": [
+        "copilot"
+      ],
+      "apps": [],
+      "ide_extensions": [
+        "github.copilot-chat",
+        "github.copilot"
+      ],
+      "config_dirs": [
+        "~/.copilot"
+      ],
+      "user_skill_dirs": [
+        "~/.copilot/skills",
+        "~/.agents/skills"
+      ],
+      "project_skill_dirs": [
+        ".github/skills",
+        ".claude/skills",
+        ".agents/skills"
+      ],
+      "managed_skill_dirs": [],
+      "version_cmd": [
+        "copilot",
+        "--version"
+      ],
+      "reference": "hosts/copilot-cli.md"
+    },
+    {
+      "id": "opencode",
+      "name": "OpenCode",
+      "binaries": [
+        "opencode"
+      ],
+      "apps": [],
+      "ide_extensions": [],
+      "config_dirs": [
+        "~/.config/opencode"
+      ],
+      "user_skill_dirs": [
+        "~/.config/opencode/skills",
+        "~/.claude/skills",
+        "~/.agents/skills"
+      ],
+      "project_skill_dirs": [
+        ".opencode/skills",
+        ".claude/skills",
+        ".agents/skills"
+      ],
+      "managed_skill_dirs": [],
+      "version_cmd": [
+        "opencode",
+        "--version"
+      ],
+      "reference": "hosts/opencode.md"
+    },
+    {
+      "id": "qwen-code",
+      "name": "Qwen Code",
+      "binaries": [
+        "qwen"
+      ],
+      "apps": [],
+      "ide_extensions": [
+        "qwenlm.qwen-code-vscode-ide-companion"
+      ],
+      "config_dirs": [
+        "~/.qwen"
+      ],
+      "user_skill_dirs": [
+        "~/.qwen/skills"
+      ],
+      "project_skill_dirs": [
+        ".qwen/skills"
+      ],
+      "managed_skill_dirs": [],
+      "version_cmd": [
+        "qwen",
+        "--version"
+      ],
+      "reference": null
+    },
+    {
+      "id": "kilo-code",
+      "name": "Kilo Code",
+      "binaries": [
+        "kilo",
+        "kilocode"
+      ],
+      "apps": [],
+      "ide_extensions": [
+        "kilocode.kilo-code"
+      ],
+      "config_dirs": [
+        "~/.kilocode",
+        "~/.config/kilo"
+      ],
+      "user_skill_dirs": [
+        "~/.kilocode/skills",
+        "~/.kilo/skills"
+      ],
+      "project_skill_dirs": [
+        ".kilocode/skills",
+        ".kilo/skills"
+      ],
+      "managed_skill_dirs": [],
+      "version_cmd": null,
+      "reference": null
+    },
+    {
+      "id": "roo-code",
+      "name": "Roo Code",
+      "binaries": [],
+      "apps": [],
+      "ide_extensions": [
+        "rooveterinaryinc.roo-cline"
+      ],
+      "config_dirs": [
+        "~/.roo"
+      ],
+      "user_skill_dirs": [
+        "~/.roo/skills"
+      ],
+      "project_skill_dirs": [
+        ".roo/skills"
+      ],
+      "managed_skill_dirs": [],
+      "version_cmd": null,
+      "reference": null
+    },
+    {
+      "id": "windsurf",
+      "name": "Windsurf",
+      "binaries": [
+        "windsurf"
+      ],
+      "apps": [
+        "Windsurf.app"
+      ],
+      "ide_extensions": [],
+      "config_dirs": [
+        "~/.codeium/windsurf"
+      ],
+      "user_skill_dirs": [
+        "~/.codeium/windsurf/skills"
+      ],
+      "project_skill_dirs": [
+        ".windsurf/skills"
+      ],
+      "managed_skill_dirs": [],
+      "version_cmd": null,
+      "reference": null
+    }
+  ],
+  "ide_extension_dirs": [
+    "~/.vscode/extensions",
+    "~/.vscode-insiders/extensions",
+    "~/.cursor/extensions",
+    "~/.windsurf/extensions",
+    "~/.antigravity/extensions"
+  ],
+  "app_dirs": [
+    "/Applications",
+    "~/Applications"
+  ],
+  "home_scan": {
+    "max_depth": 5,
+    "skip": [
+      "Library",
+      "node_modules",
+      ".git",
+      ".Trash",
+      ".cache",
+      ".npm",
+      ".nvm",
+      ".pyenv",
+      ".rustup",
+      ".cargo",
+      "go",
+      "Pictures",
+      "Movies",
+      "Music",
+      ".skill-freshness-trash",
+      "__pycache__",
+      ".venv",
+      "venv",
+      "site-packages",
+      ".tmp",
+      "tmp",
+      "extensions",
+      "marketplaces",
+      "cache",
+      "Caches",
+      "vendor_imports",
+      "plugins"
+    ]
+  }
+}

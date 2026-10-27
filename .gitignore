@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.DS_Store
+.skill-freshness-trash/
+skill-freshness-report-*.md
+!examples/*.md
+evals/results/
+*-workspace/
+inventory.json
