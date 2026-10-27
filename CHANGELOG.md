@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.1 — 2026-10-28
+
+- Test suite (33 tests) and the Agent Skills validator in CI; end-to-end eval cases with a fixture home.
+- Installable as a Claude Code plugin (`/plugin install skill-freshness --marketplace kvozianov/skill-freshness`).
+- New portability checks: non-spec frontmatter, names that break the spec or differ from the folder, invalid YAML.
+- Surface detection no longer mistakes a CLI started from the desktop app for the app itself.
+- Description reworked for triggering; validated against 20 trigger queries.
+
 ## 1.0.0 — 2026-10-28
 
 - Multi-agent scanner (`scripts/scan.py`) driven by a JSON registry of 11 agents plus a home-folder sweep; records which installed agent loads each skill folder.

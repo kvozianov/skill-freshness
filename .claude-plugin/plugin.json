@@ -1,7 +1,7 @@
 {
   "name": "skill-freshness",
   "displayName": "Skill Freshness",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Audit every agent skill on your machine (Claude Code, Codex, Cursor, Gemini, Copilot, OpenCode...): find broken, outdated, duplicated and now-built-in skills, with sources. Changes nothing without confirmation.",
   "author": {
     "name": "Kirill Vozianov",

@@ -5,7 +5,7 @@ license: MIT
 compatibility: Needs a shell and Python 3.9+. Works in Claude Code, Codex, Cursor, Gemini CLI, Copilot CLI, OpenCode, Antigravity and other Agent Skills hosts.
 metadata:
   author: Kirill Vozianov
-  version: "1.0.0"
+  version: "1.0.1"
   homepage: https://github.com/kvozianov/skill-freshness
 ---
 

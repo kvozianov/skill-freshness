@@ -108,6 +108,28 @@ python3 scripts/scan.py --check --out inventory.json
 
 It only reads files and runs `--version` / syntax checks (`--smoke` adds `--help`).
 
+## How it's tested
+
+- **Scanner:** 33 unit tests on synthetic home folders (symlinked copies, nested clones,
+  diverged duplicates, missing CLIs, broken scripts, invalid YAML, surface detection), run in
+  CI on Linux and macOS together with the official Agent Skills validator.
+- **Behaviour:** 4 end-to-end cases run with `claude plugin eval` against a fixture home that
+  contains known problems (a missing CLI, a script with a syntax error, a skill made redundant
+  by `/loop`, a diverged duplicate, a nested clone, stale model ids). Each case also runs
+  without the skill as a baseline.
+
+| Case | With skill | Without |
+|---|---|---|
+| Full audit, `--quick` | 1.00 | 0.25 |
+| Russian prose request, Claude Code + Codex | 1.00 | 0.33 |
+| One skill with a missing CLI | 1.00 | 0.33 |
+| Terminal-only user keeps their browser skill | 1.00 | 0.67 |
+
+One run per case on 2026-10-28; rerun with `claude plugin eval . --scaffold`.
+Automatic triggering from free-form requests is conservative (it never fired on
+look-alike requests, and fires on a minority of genuine ones when a hundred other skills
+compete), so the reliable entry point is `/skill-freshness`.
+
 ## Supported agents
 
 Claude Code, OpenAI Codex, Gemini CLI, Google Antigravity, Cursor, GitHub Copilot
