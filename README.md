@@ -1,5 +1,10 @@
 # skill-freshness
 
+[![ci](https://github.com/kvozianov/skill-freshness/actions/workflows/ci.yml/badge.svg)](https://github.com/kvozianov/skill-freshness/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Agent Skills spec](https://img.shields.io/badge/Agent%20Skills%20spec-valid-0f766e)](https://agentskills.io/specification)
+![Works with](https://img.shields.io/badge/works%20with-Claude%20Code%20·%20Codex%20·%20Cursor%20·%20Gemini%20·%20Copilot%20·%20OpenCode-555)
+
 **Find the agent skills on your machine that are broken, outdated, duplicated, or already built into your agent.**
 
 You install skills for Claude Code, Codex, Cursor, Gemini, Copilot… and they quietly rot.
@@ -42,6 +47,12 @@ Copilot, OpenCode and Gemini CLI) and links it into `~/.claude/skills` and the o
 agents' folders that exist on your machine. Re-run it to update. Read
 [install.sh](install.sh) first if you prefer.
 
+**As a Claude Code plugin** (Claude Code 2.1.275+):
+
+```
+/plugin install skill-freshness --marketplace kvozianov/skill-freshness
+```
+
 **With the `skills` CLI:**
 
 ```bash
@@ -54,7 +65,7 @@ npx skills add kvozianov/skill-freshness -g -a claude-code -a codex
 git clone https://github.com/kvozianov/skill-freshness ~/.claude/skills/skill-freshness
 ```
 
-Requirements: Python 3.9+ (standard library only). Node is optional (used to check
+Requirements: Python 3.9+ (standard library only), macOS or Linux. Node is optional (used to check
 JavaScript scripts). Web research uses your agent's own web search tool.
 
 ## Usage
@@ -116,6 +127,8 @@ references/audit-checklist.md   statuses, evidence rules, the surface rule, what
 references/report-template.md
 examples/                    a real report
 evals/                       test cases (claude plugin eval format)
+tests/                       scanner tests (python3 -m unittest discover -s tests)
+.claude-plugin/              Claude Code plugin + marketplace manifests
 install.sh
 ```
 

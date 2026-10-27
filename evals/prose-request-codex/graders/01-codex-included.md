@@ -4,4 +4,4 @@ focus: trace
 weight: 1
 ---
 
-The scan covers every installed agent (scan.py is run without --host), and the report has rows loaded by Codex as well as by Claude Code.
+The report covers skills in ~/.codex/skills as well as ~/.claude/skills (for example the Codex copies of obsidian-bases or investment-memo appear), and says which agent loads them or that no installed agent does.

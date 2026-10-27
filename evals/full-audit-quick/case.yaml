@@ -5,3 +5,5 @@ expected_outcome: |
   summary table (skill, source, status, confidence, why, recommendation), a "Not verified"
   line stating that no web research was done (--quick), and a proposed-actions list.
   Nothing on disk outside the report is modified or deleted.
+context:
+  scaffold_script: place-files.sh

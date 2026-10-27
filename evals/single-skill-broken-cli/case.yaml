@@ -5,3 +5,5 @@ expected_outcome: |
   `defuddle` CLI is not on PATH, looks up the current npm version, rates the skill
   broken (or outdated if the CLI is found) with a cited source, and recommends the
   exact install command from the skill. Does not install anything.
+context:
+  scaffold_script: place-files.sh

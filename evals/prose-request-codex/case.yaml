@@ -4,3 +4,5 @@ expected_outcome: |
   Triggers from a Russian prose request without the slash command, scans every agent
   on the machine (Claude Code and Codex at least), flags nested and duplicate copies and
   skills superseded by built-ins, writes the report in Russian, and makes no changes.
+context:
+  scaffold_script: place-files.sh

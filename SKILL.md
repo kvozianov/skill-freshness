@@ -1,8 +1,8 @@
 ---
 name: skill-freshness
-description: Audit every agent skill installed on this machine - Claude Code, Codex, Gemini CLI, Antigravity, Cursor, Copilot, OpenCode, Qwen Code, Kilo/Roo Code and the shared ~/.agents/skills store - and report which are broken (missing CLI, dead script, missing module), outdated (upstream moved on, old API or model id), superseded by a feature now built into the host that loads them (/loop, /schedule, built-in browser, auto memory...) or by a maintained alternative, or simply never loaded by any installed agent. Accounts for how the user runs each agent (terminal CLI vs desktop app vs IDE), so a skill is never marked redundant because of a desktop-only feature a terminal user does not have. Writes a Markdown report with sources; changes nothing without per-item confirmation. Use whenever the user asks to audit, clean up, update, de-duplicate or review their skills, asks which skills are outdated, dead or now built in, mentions skill rot or skills spread across several agents, even without naming skill-freshness.
-argument-hint: "[skill-name] [--fix] [--host <id>] [--quick] [--smoke] [--project <path>]"
+description: "Use this skill first whenever the user asks about the health of their installed agent skills: auditing, checking, cleaning up, updating or de-duplicating skills in ~/.claude/skills, ~/.codex/skills, ~/.agents/skills or plugin folders, or finding skills that are broken (missing CLI or script), outdated versus upstream, duplicated across agents, or made redundant by built-in features like /loop or /schedule. Do not inspect skill folders by hand: this skill ships a scanner that covers every agent (Claude Code, Codex, Cursor, Gemini CLI, Copilot, OpenCode, Antigravity), maps which agent loads each folder, and knows which built-ins exist in the terminal vs the desktop app vs the IDE. Also for Russian requests like 'проверь мои скиллы', 'какие скиллы устарели'. Writes a report with sources and changes nothing without per-item confirmation."
 license: MIT
+compatibility: Needs a shell and Python 3.9+. Works in Claude Code, Codex, Cursor, Gemini CLI, Copilot CLI, OpenCode, Antigravity and other Agent Skills hosts.
 metadata:
   author: Kirill Vozianov
   version: "1.0.0"
@@ -62,6 +62,9 @@ desktop app and essential for someone in a terminal. Each host's reference
 (`references/hosts/<id>.md`, section "Surfaces") says which features live
 where.
 
+- **The user already said how they work** ("I only use the terminal",
+  "Codex in VS Code") → save that right away with `--save-profile` (below)
+  and use it; do not ask again.
 - **Profile exists** → use it; mention it in the report header.
 - **No profile, and detection is unambiguous** (each installed host has one
   surface, current session is confident) → use the detected surfaces and say
@@ -74,6 +77,8 @@ where.
   python3 -I <skill-dir>/scripts/scan.py --save-profile 'claude-code=desktop,cli;codex=ide'
   ```
 
+  In a non-interactive run (no way to ask), skip the question, use the
+  conservative assumption below and say so in the report header.
   If the user does not answer, assume **the union of all installed
   surfaces minus desktop-only features**, i.e. be conservative: never call
   a skill superseded by something the user might not have.

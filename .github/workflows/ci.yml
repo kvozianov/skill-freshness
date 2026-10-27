@@ -4,8 +4,10 @@ jobs:
   scan:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
-        python: ["3.9", "3.13"]
+        include:
+          - { os: ubuntu-latest, python: "3.9" }
+          - { os: ubuntu-latest, python: "3.13" }
+          - { os: macos-latest, python: "3.13" }
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -14,6 +16,13 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: compile
         run: python -m py_compile scripts/scan.py
+      - name: unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Agent Skills spec
+        if: matrix.python == '3.13'
+        run: |
+          pip install -q skills-ref
+          agentskills validate "$GITHUB_WORKSPACE"
       - name: registry is valid JSON
         run: python -c "import json; json.load(open('scripts/hosts.json'))"
       - name: fixture skills are found

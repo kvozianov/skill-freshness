@@ -4,4 +4,4 @@ focus: trace
 weight: 1
 ---
 
-At least one nested (never-loaded) SKILL.md and at least one duplicate across sources is called out with a recommendation.
+The report flags the nested `design-taste` skill under taste-skill/skills as never loaded, and flags obsidian-bases as present in two places with different content.

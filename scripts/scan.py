@@ -92,14 +92,19 @@ def current_session() -> dict:
         host = "claude-code"
         ep = e.get("CLAUDE_CODE_ENTRYPOINT", "")
         evidence.append(f"CLAUDE_CODE_ENTRYPOINT={ep or '?'}")
-        if ep in {"claude-desktop", "desktop"} or e.get("CLAUDE_CODE_DESKTOP_APP_VERSION"):
-            surface = "desktop"
-        elif "vscode" in ep or "jetbrains" in ep or "ide" in ep:
-            surface = "ide"
-        elif ep.startswith("sdk") or ep in {"remote", "cloud"} or e.get("CLAUDE_CODE_REMOTE"):
-            surface = "cloud" if ep in {"remote", "cloud"} or e.get("CLAUDE_CODE_REMOTE") else "sdk"
+        # The entrypoint of *this* process wins: env vars such as
+        # CLAUDE_CODE_DESKTOP_APP_VERSION are inherited by child processes
+        # (a CLI started from the app's terminal), so they are only a fallback.
+        if ep in {"remote", "cloud"} or e.get("CLAUDE_CODE_REMOTE"):
+            surface = "cloud"
+        elif ep.startswith("sdk"):
+            surface = "sdk"
         elif ep == "cli":
             surface = "ide" if e.get("TERM_PROGRAM") == "vscode" else "cli"
+        elif "vscode" in ep or "jetbrains" in ep or "ide" in ep:
+            surface = "ide"
+        elif ep in {"claude-desktop", "desktop"} or (not ep and e.get("CLAUDE_CODE_DESKTOP_APP_VERSION")):
+            surface = "desktop"
     elif any(k.startswith("CODEX_") for k in e):
         host = "codex"
         origin = e.get("CODEX_INTERNAL_ORIGINATOR_OVERRIDE", "")
@@ -535,6 +540,33 @@ def analyse_skill(entry: dict) -> dict:
         r"TodoWrite|NotebookEdit|Skill|Artifact|Monitor|CronCreate|ScheduleWakeup)\b", body)))
 
     name = fm.get("name") or skill_dir.name
+
+    # Portability against the Agent Skills spec (agentskills.io): stricter
+    # hosts reject what Claude Code silently accepts.
+    spec_fields = {"name", "description", "license", "compatibility", "metadata", "allowed-tools"}
+    portability = []
+    extra = sorted(k for k in fm if not k.endswith("_raw") and k not in spec_fields)
+    if extra:
+        portability.append(f"non-spec frontmatter fields: {', '.join(extra)}")
+    if not fm.get("name"):
+        portability.append("no `name` (spec requires it)")
+    elif not re.fullmatch(r"[a-z0-9]+(-[a-z0-9]+)*", fm["name"]) or len(fm["name"]) > 64:
+        portability.append(f"name `{fm['name']}` breaks the spec pattern (lowercase letters, digits, single hyphens, max 64)")
+    elif (fm["name"] != skill_dir.name and entry.get("kind") != "plugin-commands"
+          and Path(entry.get("root", "")).resolve() != skill_dir.resolve()):
+        portability.append(f"name `{fm['name']}` differs from folder `{skill_dir.name}`")
+    # A plain (unquoted) YAML scalar may not contain ": " or start with
+    # special characters; strict hosts fail to parse such frontmatter.
+    for line in (FM_RE.match(text).group(1).splitlines() if FM_RE.match(text) else []):
+        k, sep, v = line.partition(":")
+        v = v.strip()
+        if (sep and not line.startswith((" ", "\t", "-")) and v and v[0] not in "\"'|>[{"
+                and (": " in v or v.endswith(":") or " #" in v or v[0] in "*&!%@`")):
+            portability.append(f"frontmatter `{k.strip()}` is not valid YAML (quote the value)")
+    if not fm.get("description"):
+        portability.append("no `description`: never auto-triggers")
+    elif len(fm["description"]) > 1024:
+        portability.append(f"description is {len(fm['description'])} chars (spec max 1024)")
     return {
         **entry,
         "name": name,
@@ -555,6 +587,7 @@ def analyse_skill(entry: dict) -> dict:
         "model_ids": models,
         "env_vars": envs,
         "host_tools": tools,
+        "portability": portability,
         "invokes_subagents": bool(re.search(r"\bsub-?agents?\b|\bAgent tool\b|\bTask tool\b", body, re.I)),
     }
 

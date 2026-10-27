@@ -1,0 +1,15 @@
+{
+  "name": "skill-freshness",
+  "description": "skill-freshness: audit and clean up the agent skills installed on your machine.",
+  "owner": {
+    "name": "Kirill Vozianov",
+    "url": "https://github.com/kvozianov"
+  },
+  "plugins": [
+    {
+      "name": "skill-freshness",
+      "source": "./",
+      "description": "Audit every agent skill on your machine: broken, outdated, duplicated or now built into your agent."
+    }
+  ]
+}
