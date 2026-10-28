@@ -9,7 +9,7 @@
 
 ![skill-freshness verdicts for 11 skills across Claude Code and Codex: broken, superseded, outdated, orphan, actual, each with a recommendation](assets/demo.gif)
 
-<sub>Status and recommendation columns from a real `/skill-freshness --quick` run on the test fixture in [`evals/fixtures`](evals/fixtures/make-home.sh), text unedited. The full report also has sources, details and a `--fix` checklist.</sub>
+<sub>A real `/skill-freshness --quick` run on the test fixture in [`evals/fixtures`](evals/fixtures/make-home.sh), shown with `scripts/show_report.py`; text unedited. The full report also has a source for every verdict, details and a `--fix` checklist.</sub>
 
 You install skills for Claude Code, Codex, Cursor, Gemini, Copilot… and they quietly rot.
 A CLI disappears, an upstream repo moves on, a model id gets retired, or the agent ships
@@ -112,11 +112,18 @@ python3 scripts/scan.py --check --out inventory.json
 
 It only reads files and runs `--version` / syntax checks (`--smoke` adds `--help`).
 
+To read a finished report in a terminal, with statuses in colour:
+
+```bash
+python3 scripts/show_report.py skill-freshness-report-2026-10-28.md
+```
+
 ## How it's tested
 
-- **Scanner:** 31 unit tests on synthetic home folders (symlinked copies, nested clones,
-  diverged duplicates, missing CLIs, broken scripts, invalid YAML, surface detection), run in
-  CI on Linux and macOS together with the official Agent Skills validator.
+- **Scripts:** 36 unit tests. The scanner runs against synthetic home folders (symlinked copies,
+  nested clones, diverged duplicates, missing CLIs, broken scripts, invalid YAML, surface
+  detection); the report printer against sample and real reports. CI runs them on Linux and
+  macOS together with the official Agent Skills validator.
 - **Behaviour:** 4 end-to-end cases run with `claude plugin eval` against a fixture home that
   contains known problems (a missing CLI, a script with a syntax error, a skill made redundant
   by `/loop`, a diverged duplicate, a nested clone, stale model ids). Each case also runs

@@ -5,7 +5,7 @@ license: MIT
 compatibility: Needs a shell and Python 3.9+. Works in Claude Code, Codex, Cursor, Gemini CLI, Copilot CLI, OpenCode, Antigravity and other Agent Skills hosts.
 metadata:
   author: Kirill Vozianov
-  version: "1.0.1"
+  version: "1.1.0"
   homepage: https://github.com/kvozianov/skill-freshness
 ---
 
@@ -159,7 +159,9 @@ Where to look, per axis:
 Write in the user's language (skill names, statuses and commands stay in
 English). Fill `references/report-template.md`; save to
 `<cwd>/skill-freshness-report-<YYYY-MM-DD>.md` unless the user named a path;
-show the summary table and the proposed actions in the reply.
+show the summary table and the proposed actions in the reply. In a
+terminal session, also print the summary with coloured statuses:
+`python3 -I <skill-dir>/scripts/show_report.py <report.md>`.
 Every non-`actual` row cites a source. The "Not verified" line is
 mandatory: name what the audit could not do (offline, no API key, GUI-only,
 agent not installed, sub-agent failed) instead of silently rating those
@@ -191,6 +193,7 @@ in this audit, and propose (as a `--fix` item) updating the reference.
 
 - `scripts/scan.py` - run it; read it only when its output looks wrong.
 - `scripts/hosts.json` - host registry; add a host here, no code change.
+- `scripts/show_report.py` - step 4, prints the report's summary in a terminal.
 - `references/audit-checklist.md` - step 2, every audit.
 - `references/hosts/*.md` - step 2, for each host in `readers_installed`.
 - `references/report-template.md` - step 4.

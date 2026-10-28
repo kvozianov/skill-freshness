@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.0 — 2026-10-28
+
+- `scripts/show_report.py`: prints a report's summary in the terminal with coloured statuses (works with translated headers).
+- Demo GIF re-recorded with it.
+
 ## 1.0.1 — 2026-10-28
 
 - Test suite (31 tests) and the Agent Skills validator in CI; end-to-end eval cases with a fixture home.

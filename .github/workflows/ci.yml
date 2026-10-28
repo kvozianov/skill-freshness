@@ -15,7 +15,7 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - name: compile
-        run: python -m py_compile scripts/scan.py
+        run: python -m py_compile scripts/scan.py scripts/show_report.py
       - name: unit tests
         run: python -m unittest discover -s tests -v
       - name: Agent Skills spec
