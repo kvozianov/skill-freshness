@@ -118,6 +118,21 @@ To read a finished report in a terminal, with statuses in colour:
 python3 scripts/show_report.py skill-freshness-report-2026-10-28.md
 ```
 
+## What it runs, reads and sends
+
+- **`scripts/scan.py`** reads skill folders and agent config folders in your home directory and
+  the current project. It runs only `<agent> --version`, `python -m py_compile`, `bash -n` and
+  `node --check` (plus `<script> --help` with `--smoke`). No network access.
+- **`scripts/show_report.py`** reads a report file and prints it. No network access.
+- **The agent, during an audit** (skipped with `--quick`) does read-only lookups: web search,
+  `npm view`, `pip index versions`, `git ls-remote`, `curl -sI` on links found in your skills.
+  Skill names, package names and URLs from your skills therefore reach your agent's web search
+  provider, npm, PyPI and GitHub. Nothing else is uploaded, and there is no telemetry.
+- **It writes** the report (`skill-freshness-report-<date>.md` in the current folder) and, if you
+  tell it how you work, a profile at `~/.config/skill-freshness/profile.json`. With `--fix` and
+  your yes for each item it moves skills to `.skill-freshness-trash/<date>/`, backs up files
+  before editing them, and runs the update command shown to you.
+
 ## How it's tested
 
 - **Scripts:** 36 unit tests. The scanner runs against synthetic home folders (symlinked copies,
