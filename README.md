@@ -7,9 +7,9 @@
 
 **Find the agent skills on your machine that are broken, outdated, duplicated, or already built into your agent.**
 
-![skill-freshness: the scanner maps 11 skills across Claude Code and Codex, then the agent's report rates each one with a source](assets/demo.gif)
+![skill-freshness verdicts for 11 skills across Claude Code and Codex: broken, superseded, outdated, orphan, actual, each with a recommendation](assets/demo.gif)
 
-<sub>A real `--quick` run on the test fixture in [`evals/fixtures`](evals/fixtures/make-home.sh): first the scanner, then the report the agent wrote, unedited.</sub>
+<sub>Status and recommendation columns from a real `/skill-freshness --quick` run on the test fixture in [`evals/fixtures`](evals/fixtures/make-home.sh), text unedited. The full report also has sources, details and a `--fix` checklist.</sub>
 
 You install skills for Claude Code, Codex, Cursor, Gemini, Copilot… and they quietly rot.
 A CLI disappears, an upstream repo moves on, a model id gets retired, or the agent ships
