@@ -125,6 +125,10 @@ class TestDiscovery(FakeHome):
         self.assertTrue(deep["nested"])
         self.assertFalse(top["nested"])
         self.assertIn("nested: hosts never load it", deep["flags"])
+        r = subprocess.run([sys.executable, "-I", str(SCAN), "--no-home-scan", "--no-project", "--md"],
+                           capture_output=True, text=True, env=self.env(), timeout=120)
+        row, = [ln for ln in r.stdout.splitlines() if "`deep`" in ln]
+        self.assertIn("none (nested)", row)
 
     def test_symlinked_copy_is_merged(self):
         canon = skill(self.home / ".agents" / "skills", "shared-one")
@@ -246,7 +250,10 @@ class TestChecks(FakeHome):
         d = self.run_scan("--no-home-scan", "--check")
         s, = self.by_name(d, "scripted")
         probs = " | ".join(s["checks"]["problems"])
-        self.assertIn("bad.py: syntax-error", probs)
+        self.assertIn("bad.py: syntax-error: line 1:", probs)
+        bad, = [x for x in s["checks"]["problems"] if x.startswith("scripts/bad.py")]
+        self.assertNotIn("\n", bad)
+        self.assertNotIn(str(self.home), bad)
         self.assertIn("surely_not_installed_mod", probs)
         self.assertIn("run.sh: syntax-error", probs)
         self.assertNotIn("helper", probs)
@@ -291,6 +298,8 @@ class TestChecks(FakeHome):
         skill(root, "nodesc", fm="name: nodesc")
         skill(root, "badyaml", fm="name: badyaml\ndescription: Use it for: audits")
         skill(root, "okyaml", fm='name: okyaml\ndescription: "Use it for: audits"')
+        (root / "unclosed").mkdir()
+        (root / "unclosed" / "SKILL.md").write_text("---\nname: unclosed\ndescription: x\\n---\n\nbody\n")
         d = self.run_scan("--no-home-scan")
         port = {s["name"]: " | ".join(s["portability"]) for s in d["skills"]}
         self.assertEqual(port["good"], "")
@@ -300,6 +309,7 @@ class TestChecks(FakeHome):
         self.assertIn("never auto-triggers", port["nodesc"])
         self.assertIn("not valid YAML", port["badyaml"])
         self.assertEqual(port["okyaml"], "")
+        self.assertIn("never closes", port["unclosed"])
 
     def test_smoke_runs_help(self):
         d0 = skill(self.home / ".claude" / "skills", "smoky")

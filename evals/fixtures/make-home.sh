@@ -36,7 +36,7 @@ mk "$A" grilling "Interview the user relentlessly about a plan." "" "Ask one rou
 mkdir -p "$X/taste-skill/skills"
 mk "$X/taste-skill/skills" design-taste "Opinionated frontend design rules." "" "Use bold typography."
 # stale model ids and a non-spec frontmatter field
-mk "$X" investment-memo "Write investment memos." 'models: [claude-3-5-sonnet, gpt-4]\n' "Structure: thesis, risks, recommendation."
+mk "$X" investment-memo "Write investment memos." $'models: [claude-3-5-sonnet, gpt-4]\n' "Structure: thesis, risks, recommendation."
 # script with a syntax error
 mk "$C" csv-tools "Clean CSV files." "" 'Run `python3 scripts/clean.py input.csv`.'
 mkdir -p "$C/csv-tools/scripts"; printf 'def clean(:\n    pass\n' > "$C/csv-tools/scripts/clean.py"

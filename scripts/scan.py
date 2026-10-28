@@ -548,6 +548,8 @@ def analyse_skill(entry: dict) -> dict:
     extra = sorted(k for k in fm if not k.endswith("_raw") and k not in spec_fields)
     if extra:
         portability.append(f"non-spec frontmatter fields: {', '.join(extra)}")
+    if text.startswith("---") and not FM_RE.match(text):
+        portability.append("frontmatter starts with `---` but never closes: no host can read name or description")
     if not fm.get("name"):
         portability.append("no `name` (spec requires it)")
     elif not re.fullmatch(r"[a-z0-9]+(-[a-z0-9]+)*", fm["name"]) or len(fm["name"]) > 64:
@@ -607,6 +609,17 @@ def run(cmd: list[str], timeout: int = 10, cwd: str | None = None) -> tuple[int,
         return 127, str(e)
 
 
+def syntax_error(out: str, p: Path) -> str:
+    """One line for a compiler message: no absolute paths, no code excerpt."""
+    out = out.replace(str(p), p.name)
+    lines = [ln.strip() for ln in out.splitlines() if ln.strip() and set(ln.strip()) != {"^"}]
+    msg = lines[-1] if lines else "unknown error"
+    m = re.search(r"line (\d+)", out) or re.search(re.escape(p.name) + r":(\d+)", out)
+    if m and f"line {m.group(1)}" not in msg:
+        msg = f"line {m.group(1)}: {msg}"
+    return f"syntax-error: {msg}"
+
+
 def check_skill(sk: dict, smoke: bool) -> dict:
     checks: dict = {"clis": {}, "scripts": {}, "py_imports": {}, "problems": []}
     skill_dir = sk["dir"]
@@ -648,7 +661,7 @@ def check_skill(sk: dict, smoke: bool) -> dict:
             continue
         if p.suffix == ".py":
             code, out = run([sys.executable, "-I", "-m", "py_compile", str(p)])
-            status = "syntax-ok" if code == 0 else f"syntax-error: {out}"
+            status = "syntax-ok" if code == 0 else syntax_error(out, p)
             # top-level imports
             src_py = p.read_text(errors="replace")
             mods = set(re.findall(r"^\s*from +([A-Za-z_]\w*)(?:\.[\w.]+)? +import\b", src_py, re.M))
@@ -676,10 +689,10 @@ def check_skill(sk: dict, smoke: bool) -> dict:
                     checks["problems"].append(f"python module not importable: {m} (used by {rel})")
         elif p.suffix == ".sh":
             code, out = run(["bash", "-n", str(p)])
-            status = "syntax-ok" if code == 0 else f"syntax-error: {out}"
+            status = "syntax-ok" if code == 0 else syntax_error(out, p)
         elif p.suffix in {".js", ".mjs"}:
             code, out = run(["node", "--check", str(p)])
-            status = "syntax-ok" if code == 0 else f"syntax-error: {out}"
+            status = "syntax-ok" if code == 0 else syntax_error(out, p)
         else:
             status = "not-checked"
         if status.startswith("syntax-error"):
@@ -700,6 +713,10 @@ def check_skill(sk: dict, smoke: bool) -> dict:
 # ---------------------------------------------------------------------------
 # Output
 # ---------------------------------------------------------------------------
+
+def cell(text: str) -> str:
+    return " ".join(str(text).split()).replace("|", "\\|")
+
 
 def to_markdown(result: dict) -> str:
     lines = []
@@ -723,8 +740,8 @@ def to_markdown(result: dict) -> str:
         deps = ", ".join(s.get("clis", []) + [f"{x}?" for x in s.get("clis_unresolved", [])] + [f"pkg:{x}" for x in s.get("packages", [])]) or "—"
         probs = "; ".join(s.get("checks", {}).get("problems", [])) or ("—" if "checks" in s else "not checked")
         kind = s["kind"] + (f" ({s['plugin']})" if s.get("plugin") else "") + (" NESTED" if s.get("nested") else "")
-        readers = ", ".join(s.get("readers_installed") or []) or "**none installed**"
-        lines.append(f"| {i} | `{s['name']}` | {kind} | {readers} | {s.get('last_modified')} | {deps} | {probs} |")
+        readers = "**none (nested)**" if s.get("nested") else ", ".join(s.get("readers_installed") or []) or "**none installed**"
+        lines.append(f"| {i} | `{s['name']}` | {kind} | {readers} | {s.get('last_modified')} | {cell(deps)} | {cell(probs)} |")
     return "\n".join(lines)
 
 

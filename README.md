@@ -7,6 +7,10 @@
 
 **Find the agent skills on your machine that are broken, outdated, duplicated, or already built into your agent.**
 
+![skill-freshness: the scanner maps 11 skills across Claude Code and Codex, then the agent's report rates each one with a source](assets/demo.gif)
+
+<sub>A real `--quick` run on the test fixture in [`evals/fixtures`](evals/fixtures/make-home.sh): first the scanner, then the report the agent wrote, unedited.</sub>
+
 You install skills for Claude Code, Codex, Cursor, Gemini, Copilot… and they quietly rot.
 A CLI disappears, an upstream repo moves on, a model id gets retired, or the agent ships
 the feature natively (Claude Code added `/loop`, and every "looper" skill became dead
@@ -110,7 +114,7 @@ It only reads files and runs `--version` / syntax checks (`--smoke` adds `--help
 
 ## How it's tested
 
-- **Scanner:** 33 unit tests on synthetic home folders (symlinked copies, nested clones,
+- **Scanner:** 31 unit tests on synthetic home folders (symlinked copies, nested clones,
   diverged duplicates, missing CLIs, broken scripts, invalid YAML, surface detection), run in
   CI on Linux and macOS together with the official Agent Skills validator.
 - **Behaviour:** 4 end-to-end cases run with `claude plugin eval` against a fixture home that
